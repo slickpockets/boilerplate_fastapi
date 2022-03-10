@@ -4,8 +4,6 @@ from fastapi import FastAPI
 from fastapi_socketio import SocketManager
 from fastapi_mqtt import FastMQTT, MQQTConfig
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 mqtt_config = MQQTConfig()
@@ -15,9 +13,7 @@ mqtt = FastMQTT(
 
 sio = SocketManager(app=app)
 mqtt.init_app(app)
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 @mqtt.on_connect()
 def connect(client, flags, rc, properties):
@@ -42,11 +38,6 @@ def subscribe(client, mid, qos, properties):
 async def func():
     mqtt.publish("/mqtt", "Hello from Fastapi") #publishing mqtt topic
     return {"result": True,"message":"Published" }
-
-
-@app.get("/items/{id}", response_class=HTMLResponse)
-async def read_item(request: Request, id: str):
-    return templates.TemplateResponse("item.html", {"request": request, "id": id})
 
 
 @sio.on("test")

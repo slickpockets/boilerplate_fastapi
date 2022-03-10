@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/home/slickpockets/.virtualenv/lasertanks/bin/uvicorn main:app --reload
+/home/slickpockets/.virtualenv/lasertanks/bin/uvicorn app.main:app --reload
