@@ -50,7 +50,7 @@ async def read_item(request: Request, id: str):
     return templates.TemplateResponse("item.html", {"request": request, "id": id})
 
 
-@sio.on("test")
+@app.sio.on("test")
 async def handle_test(sid, *args, **kwargs):
     await sio.emit("hi")
 
