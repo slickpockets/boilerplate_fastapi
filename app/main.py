@@ -1,9 +1,12 @@
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi_socketio import SocketManager
 from fastapi_mqtt import FastMQTT, MQQTConfig
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from starlette.applications import Starlette
 
 app = FastAPI()
 mqtt_config = MQQTConfig()
@@ -13,7 +16,9 @@ mqtt = FastMQTT(
 
 sio = SocketManager(app=app)
 mqtt.init_app(app)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 @mqtt.on_connect()
 def connect(client, flags, rc, properties):
@@ -35,14 +40,27 @@ def subscribe(client, mid, qos, properties):
 
 
 @app.get("/")
-async def func():
+async def home():
     mqtt.publish("/mqtt", "Hello from Fastapi") #publishing mqtt topic
     return {"result": True,"message":"Published" }
+
+
+@app.get("/items/{id}", response_class=HTMLResponse)
+async def read_item(request: Request, id: str):
+    return templates.TemplateResponse("item.html", {"request": request, "id": id})
 
 
 @sio.on("test")
 async def handle_test(sid, *args, **kwargs):
     await sio.emit("hi")
+
+
+    routes=[
+        Route('/', home, methods=['GET', 'POST']),
+        Mount('/statics',  name='static'),
+    ]
+
+
 
 if __name__ == '__main__':
     import logging
@@ -51,4 +69,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,
                         stream=sys.stdout)
     import uvicorn
-    uvicorn.run("main:app", host='0.0.0.0', port=8000, reload=True, debug=False)
+    uvicorn.run("main:app", routes=routes,  host='0.0.0.0', port=8000, reload=True, debug=False)

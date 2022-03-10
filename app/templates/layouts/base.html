@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        {% block head %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        {% block styles %}
+        <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+
+        {% endblock %}
+        <title>Lasertanks baby</title>
+        <script src="{{url_for('static', filename='vendor/socket.io.js')}}"></script>
+
+        {% endblock %}
+
+
+    </head>
+    <body>
+
+
+
+
+        <!-- Your page content -->
+        {% block content %}{% endblock %}
+
+        <!--making life easier -->
+
+        {% block scripts %}
+
+        {% endblock %}
+    </body>
+</html>
