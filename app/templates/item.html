@@ -5,15 +5,22 @@
 </head>
 <body>
     <h1>Item ID: {{ id }}</h1>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="{{url_for('static', path='vendor/socketio/socket.io.js')}}"></script>
-    <button onclick="func()"> </button>
+
+    <button onclick="func()"> asdf</button>
     <script>
     var url = window.location.hostname;
-    var socket = io("http://127.0.0.1:8000");
-
+    var socket = io('ws://localhost:8000', {
+    path: '/ws/socket.io'
+    });
+    socket.on("hi", function() {
+      console.log("hi")
+    })
 
     function func(){
-      socket.emit("test", "hi")
+      socket.emit("test")
+      console.log("hit")
     }
      </script>
 </body>

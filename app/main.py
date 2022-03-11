@@ -20,6 +20,8 @@ mqtt.init_app(app)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+
+
 @mqtt.on_connect()
 def connect(client, flags, rc, properties):
     mqtt.client.subscribe("/mqtt") #subscribing mqtt topic
@@ -52,13 +54,19 @@ async def read_item(request: Request, id: str):
 
 @app.sio.on("test")
 async def handle_test(sid, *args, **kwargs):
+    print("hit")
     await sio.emit("hi")
 
 
-    routes=[
-        Route('/', home, methods=['GET', 'POST']),
-        Mount('/statics',  name='static'),
-    ]
+@app.sio.on('client_connect_event')
+async def handle_client_connect_event(sid, *args, **kwargs): # (!)
+    await app.sio.emit('testy2', {'data': 'connection was successful'})
+
+@app.sio.on('client_start_event')
+async def handle_client_start_event(sid, *args, **kwargs): # (!)
+    print('Server says: start_event worked')
+    await app.sio.emit('testy',{'data':'start event worked'})
+
 
 
 
@@ -69,4 +77,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,
                         stream=sys.stdout)
     import uvicorn
-    uvicorn.run("main:app", routes=routes,  host='0.0.0.0', port=8000, reload=True, debug=False)
+    uvicorn.run("main:app", host='0.0.0.0', port=8000, reload=True, debug=False)
