@@ -20,6 +20,7 @@ mqtt.init_app(app)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+mqtt_topics = {"/mqtt": "hello"}
 
 
 @mqtt.on_connect()
@@ -29,7 +30,10 @@ def connect(client, flags, rc, properties):
 
 @mqtt.on_message()
 async def message(client, topic, payload, qos, properties):
-    print("Received message: ",topic, payload.decode(), qos, properties)
+    #print("Received message: ",topic, payload.decode(), qos, properties)
+    #print(topic, payload.decode())
+    print(mqtt_topics[topic])
+    await app.sio.emit("test", payload.decode())
     return 0
 
 @mqtt.on_disconnect()
@@ -51,16 +55,22 @@ async def home():
 async def read_item(request: Request, id: str):
     return templates.TemplateResponse("item.html", {"request": request, "id": id})
 
-
 @app.sio.on("test")
 async def handle_test(sid, *args, **kwargs):
-    print("hit")
-    await sio.emit("hi")
+    print("test")
+    return 0
+
+@app.sio.on("test2")
+async def handle_test(sid, *args, **kwargs):
+    print("test2")
+    return 0
+
 
 
 @app.sio.on('client_connect_event')
-async def handle_client_connect_event(sid, *args, **kwargs): # (!)
-    await app.sio.emit('testy2', {'data': 'connection was successful'})
+async def handle_client_connect_event(sid, *args, **kwargs):
+    mqtt.publish("/mqtt", "Hello from Fastapi")
+    #app.sio.emit('testy2', {'data': 'connection was successful'})
 
 @app.sio.on('client_start_event')
 async def handle_client_start_event(sid, *args, **kwargs): # (!)
@@ -77,4 +87,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG,
                         stream=sys.stdout)
     import uvicorn
-    uvicorn.run("main:app", host='0.0.0.0', port=8000, reload=True, debug=False)
+    uvicorn.run("main:app", host='0.0.0.0', port=8000, reload=True, debug=True  )
