@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+
+    <h1>LaserTanks</h1>
+
+    <button onclick="testfunc()"> test1</button>
+    <br>
+
+    <button onclick="testfunc2()"> test2</button>
+
+
+    <script src="{{url_for('static', path='js/index.js')}}"></script>
+
+{% endblock %}

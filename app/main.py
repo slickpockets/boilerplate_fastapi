@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from starlette.applications import Starlette
-
+from pathlib import Path
 app = FastAPI()
 mqtt_config = MQQTConfig()
 mqtt = FastMQTT(
@@ -16,9 +16,10 @@ mqtt = FastMQTT(
 
 sio = SocketManager(app=app)
 mqtt.init_app(app)
+path = Path.cwd()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+templates = Jinja2Templates(directory="app/templates")
 
 mqtt_topics = {"/mqtt": "hello"}
 
@@ -30,9 +31,8 @@ def connect(client, flags, rc, properties):
 
 @mqtt.on_message()
 async def message(client, topic, payload, qos, properties):
-    #print("Received message: ",topic, payload.decode(), qos, properties)
-    #print(topic, payload.decode())
-    print(mqtt_topics[topic])
+    print("Received message: ",topic, payload.decode(), qos, properties)
+    print(topic, payload.decode())
     await app.sio.emit("test", payload.decode())
     return 0
 
@@ -45,15 +45,14 @@ def subscribe(client, mid, qos, properties):
     print("subscribed", client, mid, qos, properties)
 
 
-@app.get("/")
-async def home():
-    mqtt.publish("/mqtt", "Hello from Fastapi") #publishing mqtt topic
-    return {"result": True,"message":"Published" }
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/items/{id}", response_class=HTMLResponse)
 async def read_item(request: Request, id: str):
-    return templates.TemplateResponse("item.html", {"request": request, "id": id})
+    return templates.TemplateResponse("index.html", {"request": request, "id": id})
 
 @app.sio.on("test")
 async def handle_test(sid, *args, **kwargs):
@@ -63,6 +62,7 @@ async def handle_test(sid, *args, **kwargs):
 @app.sio.on("test2")
 async def handle_test(sid, *args, **kwargs):
     print("test2")
+    mqtt.publish("/test2", "yo")
     return 0
 
 

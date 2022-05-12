@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
     <head>
 
         {% block head %}
@@ -7,28 +6,26 @@
         <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         {% block styles %}
-        <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='/css/styles.css') }}" rel="stylesheet">
 
         {% endblock %}
         <title>Lasertanks baby</title>
-        <script src="{{url_for('static', filename='vendor/socket.io.js')}}"></script>
-
+        <script src="{{url_for('static', path='vendor/socketio/socket.io.js')}}"></script>
         {% endblock %}
-
 
     </head>
     <body>
-
-
-
-
         <!-- Your page content -->
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
 
         <!--making life easier -->
 
         {% block scripts %}
+        <script src="{{url_for('static', path='vendor/jquery/jquery-3.6.0.js')}}"></script>
+        <script src="{{url_for('static', path='js/sockets.js')}}"></script>
 
         {% endblock %}
+
     </body>
 </html>
