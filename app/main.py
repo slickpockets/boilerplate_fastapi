@@ -50,9 +50,9 @@ async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/items/{id}", response_class=HTMLResponse)
-async def read_item(request: Request, id: str):
-    return templates.TemplateResponse("index.html", {"request": request, "id": id})
+@app.get("/item", response_class=HTMLResponse)
+async def read_item(request: Request):
+    return templates.TemplateResponse("item.html", {"request": request})
 
 @app.sio.on("test")
 async def handle_test(sid, *args, **kwargs):

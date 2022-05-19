@@ -1,8 +1,21 @@
 {% extends "layouts/base.html" %}
 {% block content %}
 
-    <h1>LaserTanks</h1>
+      <h1>LaserTanks</h1>
+    <div class="container" >
+    <div id="div1">
+          <h2>Tank1</h2>
 
+    </div>
+    <div id="div2">
+        <h2>Tank1</h2>
+    </div>
+    <div id="div3">
+        <h2>Tank1</h2>
+    </div>
+    <div  id="div4">
+        <h2>Tank1</h2>
+    </div>
     <button onclick="testfunc()"> test1</button>
     <br>
 
@@ -10,5 +23,5 @@
 
 
     <script src="{{url_for('static', path='js/index.js')}}"></script>
-
+    </div>
 {% endblock %}
