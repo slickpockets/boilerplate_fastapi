@@ -1,0 +1,14 @@
+{% macro showhide(triggerid, showid, hideid, varname ) %}
+<script>
+var {{varname}} = document.getElementById("{{triggerid}}")
+{{varname}}.addEventListener("change", (event) => {
+  if ({{varname}}.value == "{{showid}}"){
+    document.getElementById("{{hideid}}").setAttribute("class", "hide")
+    document.getElementById("{{showid}}").removeAttribute("class", "hide")
+  } else if({{varname}}.value == "{{hideid}}"){
+    document.getElementById("{{showid}}").setAttribute("class", "hide")
+    document.getElementById("{{hideid}}").removeAttribute("class", "hide")
+  }
+})
+</script>
+{% endmacro %}

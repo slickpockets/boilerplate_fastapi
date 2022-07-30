@@ -1,0 +1,7 @@
+{% macro generateIcon(name, colour="black", size=None)%}
+{% if size == None %}
+<i class="material-icons {{colour}}-text">{{name}}</i>
+{% else %}
+<i class="{{size}} material-icons {{colour}}-text">{{name}}</i>
+{% endif %}
+{% endmacro %}

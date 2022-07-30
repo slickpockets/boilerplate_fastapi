@@ -2,35 +2,29 @@
     <head>
 
         {% block head %}
-        <!-- Required meta tags -->
         <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         {% block styles %}
         <link href="{{ url_for('static', path='/css/styles.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static', path='/tailwind/dist/output.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', path='vendor/materialize/css/materialize.min.css') }}" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        {% endblock %}
+        <title>Puzzle Tech Ordering</title>
 
         {% endblock %}
-        <title>Lasertanks baby</title>
-        <script src="{{url_for('static', path='vendor/socketio/socket.io.js')}}"></script>
-        {% endblock %}
-        <script>
-    tailwind.config = {
-      theme: {
-        container: {
-          center: true,
-        }
-    }
-  </script>
+
     </head>
     <body>
-        <!-- Your page content -->
+
+      {% include 'partials/nav.html' %}
         {% block content %}
         {% endblock %}
 
-        <!--making life easier -->
 
         {% block scripts %}
-        <script src="{{url_for('static', path='vendor/jquery/jquery-3.6.0.js')}}"></script>
+        <script src="{{url_for('static', path='vendor/socketio/socket.io.min.js')}}"></script>
+        <script src="{{url_for('static', path='vendor/materialize/js/materialize.min.js')}}"></script>
+
         <script src="{{url_for('static', path='js/sockets.js')}}"></script>
 
         {% endblock %}
