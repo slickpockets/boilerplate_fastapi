@@ -27,7 +27,7 @@ clone this repo
 
 
 ```sh
-cd boilerplate
+cd boilerplate_fastapi
 python3 -m pip install -r requirements.txt
 ```
 
