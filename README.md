@@ -5,6 +5,7 @@
 
 ## Description
 Boilerplate for fastapi
+uses a few fastapi libraries and materalizecss for the frontend html, includes a few generalized jinja macros for materializecss
 
 
 ## Tech/Dependencies
@@ -34,13 +35,6 @@ python3 -m pip install -r requirements.txt
 ```sh
 ./startup.sh
 ```
-
-
-
-
-
-
-
 
 ## Docker
 - todo
